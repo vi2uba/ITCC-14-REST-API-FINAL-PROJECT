@@ -2,9 +2,23 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const barangayRoutes = require('./API/routes/barangay');
 const peopleRoutes = require('./API/routes/people');
+
+//Connect to MongoAtlas DB
+mongoose.connect('mongodb+srv://vinniuba2:Vl90RrRWSg3VrwX6@node-rest-api.61hixs6.mongodb.net/?retryWrites=true&w=majority', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+  .then(() => {
+    console.log('Connected to MongoDB');
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+  });
+
 
 //Morgan Logs Requests
 app.use(morgan('dev'));
@@ -18,7 +32,7 @@ app.use((req,res,next) => {
     res.header('Access-Control-Allow-Origin','*');
     res.header('Access-Control-Allow-Headers','Origin, X-Requested-With, Content-Type, Accept, Authorization');
     if(req.method==='OPTIONS'){
-        res.header('Access-Control-Allow-Methods', 'PUT, POST, DELETE, GET');
+        res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
         return res.status(200).json({});
     }
     next();
