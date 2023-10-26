@@ -12,8 +12,14 @@ router.get('/', (req,res,next) =>{
 
 //Handles POST requests
 router.post('/', (req,res,next) =>{
+    const barangay ={
+        name: req.body.name,
+        population: req.body.population
+    }
+
     res.status(200).json({
-        message: 'Hell Yeah!, Handling POST request to /barangay'
+        message: 'Hell Yeah!, Handling POST request to /barangay',
+        created_barangays: barangay
     });
 
 });

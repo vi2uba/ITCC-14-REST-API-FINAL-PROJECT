@@ -12,8 +12,14 @@ router.get('/', (req,res,next) =>{
 
 //Handles POST requests
 router.post('/', (req,res,next) =>{
+    const people ={
+        name: req.body.name,
+        residence: req.body.residence
+    }
+
     res.status(200).json({
-        message: 'Hell Yeah!, Handling POST request to /people'
+        message: 'Hell Yeah!, Handling POST request to /people',
+        created_people: people
     });
 
 });
