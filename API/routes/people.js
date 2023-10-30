@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const People = require('../models/people_model');
+const Barangay = require('../models/barangay_model');
 const mongoose = require('mongoose');
 
 
@@ -25,28 +26,37 @@ router.get('/', (req, res, next) => {
 });
 
 
-// Handles POST requests
-router.post('/', (req, res, next) => {
+// Handles POST requests for adding a new person
+router.post('/', async (req, res, next) => {
     const person = new People({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        residence: req.body.residence
+        residence: req.body.residence,
     });
 
-    person
-        .save()
-        .then(result => {
-            console.log(result);
+    // Find the corresponding barangay and update its population
+    try {
+        const barangay = await Barangay.findOne({ name: req.body.residence });
+        if (barangay) {
+            // Update the population of the barangay
+            barangay.population += 1;
+
+            // Save the updated barangay and the new person
+            await Promise.all([person.save(), barangay.save()]);
+
             res.status(200).json({
                 message: 'Person created successfully',
-                created_person: result
+                created_person: person,
             });
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({ error: err });
-        });
+        } else {
+            res.status(404).json({ message: 'Residence not found' });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err });
+    }
 });
+
 
 
 // Handles PUT requests
@@ -102,24 +112,35 @@ router.patch('/:personID', (req, res, next) => {
 
 module.exports = router;
 
-// Handles DELETE requests
-router.delete('/:personID', (req, res, next) => {
+// Handles DELETE requests for removing a person
+router.delete('/:personID', async (req, res, next) => {
     const personID = req.params.personID;
 
-    People.deleteOne({ _id: personID })
-        .exec()
-        .then(result => {
-            if (result.deletedCount > 0) {
-                res.status(200).json({ message: 'Person deleted successfully' });
-            } else {
-                res.status(404).json({ message: 'Person not found' });
+    try {
+        const person = await People.findById(personID);
+        if (person) {
+            // Find the corresponding barangay and update its population
+            const barangay = await Barangay.findOne({ name: person.residence });
+            if (barangay) {
+                // Update the population of the barangay
+                barangay.population -= 1;
+                await barangay.save();
             }
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({ error: err });
-        });
+
+            // Use the `deleteOne` method to delete the person
+            await People.deleteOne({ _id: personID });
+            res.status(200).json({ message: 'Person deleted successfully' });
+        } else {
+            res.status(404).json({ message: 'Person not found' });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: err });
+    }
 });
+
+
+
 
 module.exports = router;
 
