@@ -10,7 +10,29 @@ const mongoose = require('mongoose');
 router.get('/', (req, res, next) => {
     const filters = req.query; // Get the query parameters from the request
 
-    People.find(filters) // Use the filters to search for people in the database
+    const filterConditions = {};
+
+    for (const key in filters) {
+        if (filters.hasOwnProperty(key)) {
+            const value = parseInt(filters[key]); // Convert the value to an integer
+
+            // Split the key to separate the field name and the condition
+            const [field, condition] = key.split('_');
+
+            if (condition === 'exact') {
+                // For exact match
+                filterConditions[field] = value;
+            } else if (condition === 'lt') {
+                // For less than
+                filterConditions[field] = { $lt: value };
+            } else if (condition === 'gt') {
+                // For greater than
+                filterConditions[field] = { $gt: value };
+            }
+        }
+    }
+
+    People.find(filterConditions) // Use the filter conditions to search for people in the database
         .exec()
         .then(people => {
             if (people.length > 0) {
@@ -24,6 +46,9 @@ router.get('/', (req, res, next) => {
             res.status(500).json({ error: err });
         });
 });
+
+
+
 
 
 // Handles POST requests for adding a new person

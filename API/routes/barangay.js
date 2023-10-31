@@ -7,22 +7,45 @@ const { json } = require('body-parser');
 
 // Handles GET request to retrieve barangays with specific filters
 router.get('/', (req, res, next) => {
-    const filters = req.query; // Get the query parameters from the request
+  const filters = req.query; // Get the query parameters from the request
 
-    Barangay.find(filters) // Use the filters to search for barangays in the database
-        .exec()
-        .then(barangays => {
-            if (barangays.length > 0) {
-                res.status(200).json(barangays);
-            } else {
-                res.status(404).json({ message: 'No matching barangays found' });
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({ error: err });
-        });
+  const filterConditions = {};
+
+  for (const key in filters) {
+      if (filters.hasOwnProperty(key)) {
+          const value = parseInt(filters[key]); // Convert the value to an integer
+
+          // Split the key to separate the field name and the condition
+          const [field, condition] = key.split('_');
+
+          if (condition === 'exact') {
+              // For exact match
+              filterConditions[field] = value;
+          } else if (condition === 'lt') {
+              // For less than
+              filterConditions[field] = { $lt: value };
+          } else if (condition === 'gt') {
+              // For greater than
+              filterConditions[field] = { $gt: value };
+          }
+      }
+  }
+
+  Barangay.find(filterConditions) // Use the filter conditions to search for barangays in the database
+      .exec()
+      .then(barangays => {
+          if (barangays.length > 0) {
+              res.status(200).json(barangays);
+          } else {
+              res.status(404).json({ message: 'No matching barangays found' });
+          }
+      })
+      .catch(err => {
+          console.log(err);
+          res.status(500).json({ error: err });
+      });
 });
+
 
 //Handles POST requests
 router.post('/', (req,res,next) =>{
