@@ -31,12 +31,19 @@ router.post('/', async (req, res, next) => {
     const person = new People({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
-        residence: req.body.residence,
+        age: req.body.age,
+        income: req.body.income,
+        years_residing: req.body.years_residing,
+        marital_status: req.body.marital_status,
+        education: req.body.education,
+        employment: req.body.employment,
+        residence_Barangay: req.body.residence_Barangay,
+        zone: req.body.zone
     });
 
     // Find the corresponding barangay and update its population
     try {
-        const barangay = await Barangay.findOne({ name: req.body.residence });
+        const barangay = await Barangay.findOne({ name: req.body.residence_Barangay });
         if (barangay) {
             // Update the population of the barangay
             barangay.population += 1;
@@ -49,7 +56,7 @@ router.post('/', async (req, res, next) => {
                 created_person: person,
             });
         } else {
-            res.status(404).json({ message: 'Residence not found' });
+            res.status(404).json({ message: 'residence_Barangay not found' });
         }
     } catch (err) {
         console.error(err);
@@ -120,7 +127,7 @@ router.delete('/:personID', async (req, res, next) => {
         const person = await People.findById(personID);
         if (person) {
             // Find the corresponding barangay and update its population
-            const barangay = await Barangay.findOne({ name: person.residence });
+            const barangay = await Barangay.findOne({ name: person.residence_Barangay });
             if (barangay) {
                 // Update the population of the barangay
                 barangay.population -= 1;
