@@ -4,7 +4,208 @@ const People = require('../models/people_model');
 const Barangay = require('../models/barangay_model');
 const mongoose = require('mongoose');
 
+/**
+ * @swagger
+ * tags:
+ *   name: People
+ *   description: Endpoints for managing people data
+ */
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *     People:
+ *       type: object
+ *       properties:
+ *         name:
+ *           type: string
+ *         age:
+ *           type: number
+ *         income:
+ *           type: number
+ *         years_residing:
+ *           type: number
+ *         marital_status:
+ *           type: string
+ *         education:
+ *           type: string
+ *         employment:
+ *           type: string
+ *         residence_Barangay:
+ *           type: string
+ *         zone:
+ *           type: number
+ */
+/**
+ * @swagger
+ * /people:
+ *   get:
+ *     summary: Get a list of people with specific filters.
+ *     tags: [People]
+ *     parameters:
+ *       - name: keyname
+ *         in: query
+ *         description: The field name and condition separated by a forward slash (e.g., keyname/exact).
+ *         schema:
+ *           type: string
+ *       - name: value
+ *         in: query
+ *         description: The value to filter by.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Successful response.
+ */
 
+/**
+ * @swagger
+ * /people:
+ *   post:
+ *     summary: Create a new person.
+ *     tags: [People]
+ *     requestBody:
+ *       description: Person data to create
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               age:
+ *                 type: number
+ *               income:
+ *                 type: number
+ *               years_residing:
+ *                 type: number
+ *               marital_status:
+ *                 type: string
+ *               education:
+ *                 type: string
+ *               employment:
+ *                 type: string
+ *               residence_Barangay:
+ *                 type: string
+ *               zone:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Person created successfully.
+ *       404:
+ *         description: residence_Barangay not found.
+ *       500:
+ *         description: Internal server error.
+ */
+
+/**
+ * @swagger
+ * /people/{personID}:
+ *   put:
+ *     summary: Update a person.
+ *     tags: [People]
+ *     parameters:
+ *       - in: path
+ *         name: personID
+ *         required: true
+ *         description: ID of the person to update.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       description: Updated person data
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               age:
+ *                 type: number
+ *               income:
+ *                 type: number
+ *               years_residing:
+ *                 type: number
+ *               marital_status:
+ *                 type: string
+ *               education:
+ *                 type: string
+ *               employment:
+ *                 type: string
+ *               residence_Barangay:
+ *                 type: string
+ *               zone:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Person updated successfully.
+ *       404:
+ *         description: Person not found.
+ *       500:
+ *         description: Internal server error.
+ *   patch:
+ *     summary: Partially update a person.
+ *     tags: [People]
+ *     parameters:
+ *       - in: path
+ *         name: personID
+ *         required: true
+ *         description: ID of the person to update.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       description: Partially updated person data
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               age:
+ *                 type: number
+ *               income:
+ *                 type: number
+ *               years_residing:
+ *                 type: number
+ *               marital_status:
+ *                 type: string
+ *               education:
+ *                 type: string
+ *               employment:
+ *                 type: string
+ *               residence_Barangay:
+ *                 type: string
+ *               zone:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Person updated successfully.
+ *       404:
+ *         description: Person not found.
+ *       500:
+ *         description: Internal server error.
+ *   delete:
+ *     summary: Delete a person.
+ *     tags: [People]
+ *     parameters:
+ *       - in: path
+ *         name: personID
+ *         required: true
+ *         description: ID of the person to delete.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Person deleted successfully.
+ *       404:
+ *         description: Person not found.
+ *       500:
+ *         description: Internal server error.
+ */
 
 // Handles GET request to retrieve people with specific filters
 router.get('/', (req, res, next) => {
@@ -14,25 +215,31 @@ router.get('/', (req, res, next) => {
 
     for (const key in filters) {
         if (filters.hasOwnProperty(key)) {
-            const value = parseInt(filters[key]); // Convert the value to an integer
+            const value = filters[key];
 
             // Split the key to separate the field name and the condition
-            const [field, condition] = key.split('_');
+            const [field, condition] = key.split('/');
 
             if (condition === 'exact') {
-                // For exact match
+                // For exact match (for both string and numeric fields)
                 filterConditions[field] = value;
             } else if (condition === 'lt') {
-                // For less than
-                filterConditions[field] = { $lt: value };
+                // For less than (numeric fields only)
+                const numericValue = parseFloat(value);
+                if (!isNaN(numericValue)) {
+                    filterConditions[field] = { $lt: numericValue };
+                }
             } else if (condition === 'gt') {
-                // For greater than
-                filterConditions[field] = { $gt: value };
+                // For greater than (numeric fields only)
+                const numericValue = parseFloat(value);
+                if (!isNaN(numericValue)) {
+                    filterConditions[field] = { $gt: numericValue };
+                }
             }
         }
     }
 
-    People.find(filterConditions) // Use the filter conditions to search for people in the database
+    People.find(filterConditions)
         .exec()
         .then(people => {
             if (people.length > 0) {
@@ -46,6 +253,7 @@ router.get('/', (req, res, next) => {
             res.status(500).json({ error: err });
         });
 });
+
 
 
 

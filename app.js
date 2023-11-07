@@ -4,6 +4,11 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger'); // Import your Swagger configuration
+
+
 const barangayRoutes = require('./API/routes/barangay');
 const peopleRoutes = require('./API/routes/people');
 
@@ -38,9 +43,15 @@ app.use((req,res,next) => {
     next();
 })
 
-//Routes that will handle the requestsnp
+
+
+//Routes that will handle the requests
 app.use('/barangay', barangayRoutes);
 app.use('/people', peopleRoutes);
+
+// Serve Swagger UI
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 
 //Error Handler
 app.use((req,res,next) => {
