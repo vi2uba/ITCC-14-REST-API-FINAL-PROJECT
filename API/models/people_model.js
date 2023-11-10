@@ -1,30 +1,4 @@
 const mongoose = require('mongoose');
-/**
- * @swagger
- * components:
- *   schemas:
- *     People:
- *       type: object
- *       properties:
- *         name:
- *           type: string
- *         age:
- *           type: number
- *         income:
- *           type: number
- *         years_residing:
- *           type: number
- *         marital_status:
- *           type: string
- *         education:
- *           type: string
- *         employment:
- *           type: string
- *         residence_Barangay:
- *           type: string
- *         zone:
- *           type: number
- */
 
 
 // Clear Mongoose models

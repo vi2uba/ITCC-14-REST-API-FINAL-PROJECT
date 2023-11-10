@@ -1,0 +1,497 @@
+openapi: 3.0.0
+info:
+  title: Barangay Census API
+  version: 1.0.0
+  description: >-
+    An API that allows Barangays to Add people and and barangays and calculate
+    the population automatically
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: 20180015014@my.xu.edu.ph
+  license:
+    name: Node Js Licence
+    url: https://github.com/nodejs/node/blob/main/LICENSE
+servers:
+  - url: http://localhost:3000
+components:
+  securitySchemes:
+    apiKey:
+      type: apiKey
+      name: APIKey
+      in: header
+  schemas:
+    Barangays:
+      type: object
+      properties:
+        name:
+          type: string
+        population:
+          type: number
+    People:
+      type: object
+      properties:
+        name:
+          type: string
+        age:
+          type: number
+        income:
+          type: number
+        years_residing:
+          type: number
+        marital_status:
+          type: string
+        education:
+          type: string
+        employment:
+          type: string
+        residence_Barangay:
+          type: string
+        zone:
+          type: number
+    Users:
+      type: object
+      properties:
+        email:
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+        api_key:
+          type: string
+        userStatus:
+          type: number
+paths:
+  /barangay:
+    get:
+      summary: Get a list of barangays with specific filters.
+      tags:
+        - Barangay
+      parameters:
+        - name: name/exact
+          in: query
+          description: Filter by exact name.
+          schema:
+            type: string
+        - name: population/exact
+          in: query
+          description: Filter by exact population.
+          schema:
+            type: number
+        - name: population/lt
+          in: query
+          description: Filter by population less than.
+          schema:
+            type: number
+        - name: population/gt
+          in: query
+          description: Filter by population greater than.
+          schema:
+            type: number
+      security:
+        - apiKey: []
+      responses:
+        '200':
+          description: Successful response.
+        '400':
+          description: No Matching Person.
+        '500':
+          description: Internal Server error
+    post:
+      summary: Create a new barangay.
+      tags:
+        - Barangay
+      requestBody:
+        description: Barangay data to create
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                population:
+                  type: number
+      security:
+        - apiKey: []
+      responses:
+        '200':
+          description: Barangay created successfully.
+        '400':
+          description: Clien error.
+        '500':
+          description: Internal server error.
+  /barangay/{barangayID}:
+    put:
+      summary: Update a barangay.
+      tags:
+        - Barangay
+      parameters:
+        - in: path
+          name: barangayID
+          required: true
+          description: ID of the barangay to update.
+          schema:
+            type: string
+      requestBody:
+        description: Updated barangay data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                population:
+                  type: number
+      security:
+        - apiKey: []
+      responses:
+        '200':
+          description: Barangay updated successfully.
+        '500':
+          description: Internal server error.
+    patch:
+      summary: Partially update a barangay.
+      tags:
+        - Barangay
+      parameters:
+        - in: path
+          name: barangayID
+          required: true
+          description: ID of the barangay to update.
+          schema:
+            type: string
+      requestBody:
+        description: Partially updated barangay data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                population:
+                  type: number
+      security:
+        - apiKey: []
+      responses:
+        '200':
+          description: Barangay updated successfully.
+        '500':
+          description: Internal server error.
+    delete:
+      summary: Delete a barangay.
+      tags:
+        - Barangay
+      parameters:
+        - in: path
+          name: barangayID
+          required: true
+          description: ID of the barangay to delete.
+          schema:
+            type: string
+      security:
+        - apiKey: []
+      responses:
+        '200':
+          description: Barangay deleted successfully.
+        '404':
+          description: Barangay not found.
+        '500':
+          description: Internal server error.
+  /people:
+    get:
+      summary: Get a list of people with specific filters.
+      tags:
+        - People
+      parameters:
+        - name: name/exact
+          in: query
+          description: Filter by name.
+          schema:
+            type: string
+        - name: age/exact
+          in: query
+          description: Filter by exact age.
+          schema:
+            type: number
+        - name: income/exact
+          in: query
+          description: Filter by exact income.
+          schema:
+            type: number
+        - name: years_residing/exact
+          in: query
+          description: Filter by exact years residing.
+          schema:
+            type: number
+        - name: marital_status/exact
+          in: query
+          description: Filter by Marital Status.
+          schema:
+            type: string
+        - name: education/exact
+          in: query
+          description: Filter by Education.
+          schema:
+            type: string
+        - name: employment/exact
+          in: query
+          description: Filter by Employment.
+          schema:
+            type: string
+        - name: residence_Barangay/exact
+          in: query
+          description: Filter by exact residence.
+          schema:
+            type: string
+        - name: age/lt
+          in: query
+          description: Filter by age less than.
+          schema:
+            type: number
+        - name: age/gt
+          in: query
+          description: Filter by age greater than.
+          schema:
+            type: number
+        - name: income/lt
+          in: query
+          description: Filter by income less than.
+          schema:
+            type: number
+        - name: income/gt
+          in: query
+          description: Filter by income greater than.
+          schema:
+            type: number
+        - name: years_residing/lt
+          in: query
+          description: Filter by years_residing less than.
+          schema:
+            type: number
+        - name: years_residing/gt
+          in: query
+          description: Filter by years_residing greater than.
+          schema:
+            type: number
+      security:
+        - apiKey: []
+      responses:
+        '200':
+          description: Successful response.
+        '400':
+          description: No Matching Person.
+        '500':
+          description: Internal Server error.
+    post:
+      summary: Create a new person.
+      tags:
+        - People
+      requestBody:
+        description: Person data to create
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                age:
+                  type: number
+                income:
+                  type: number
+                years_residing:
+                  type: number
+                marital_status:
+                  type: string
+                education:
+                  type: string
+                employment:
+                  type: string
+                residence_Barangay:
+                  type: string
+                zone:
+                  type: string
+      security:
+        - apiKey: []
+      responses:
+        '201':
+          description: Person created successfully.
+        '404':
+          description: residence_Barangay not found.
+        '500':
+          description: Internal server error.
+  /people/{personID}:
+    put:
+      summary: Update a person.
+      tags:
+        - People
+      parameters:
+        - in: path
+          name: personID
+          required: true
+          description: ID of the person to update.
+          schema:
+            type: string
+      requestBody:
+        description: Updated person data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                age:
+                  type: number
+                income:
+                  type: number
+                years_residing:
+                  type: number
+                marital_status:
+                  type: string
+                education:
+                  type: string
+                employment:
+                  type: string
+                residence_Barangay:
+                  type: string
+                zone:
+                  type: string
+      security:
+        - apiKey: []
+      responses:
+        '200':
+          description: Person updated successfully.
+        '404':
+          description: Person not found.
+        '500':
+          description: Internal server error.
+    patch:
+      summary: Partially update a person.
+      tags:
+        - People
+      parameters:
+        - in: path
+          name: personID
+          required: true
+          description: ID of the person to update.
+          schema:
+            type: string
+      requestBody:
+        description: Partially updated person data
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                age:
+                  type: number
+                income:
+                  type: number
+                years_residing:
+                  type: number
+                marital_status:
+                  type: string
+                education:
+                  type: string
+                employment:
+                  type: string
+                residence_Barangay:
+                  type: string
+                zone:
+                  type: string
+      security:
+        - apiKey: []
+      responses:
+        '200':
+          description: Person updated successfully.
+        '404':
+          description: Person not found.
+        '500':
+          description: Internal server error.
+    delete:
+      summary: Delete a person.
+      tags:
+        - People
+      parameters:
+        - in: path
+          name: personID
+          required: true
+          description: ID of the person to delete.
+          schema:
+            type: string
+      security:
+        - apiKey: []
+      responses:
+        '200':
+          description: Person deleted successfully.
+        '404':
+          description: Person not found.
+        '500':
+          description: Internal server error.
+  /users/register:
+    post:
+      summary: Register a new user.
+      tags:
+        - Users
+      requestBody:
+        description: User registration
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: User registered successfully.
+        '400':
+          description: Client error.
+        '500':
+          description: Internal server error.
+  /users/login:
+    post:
+      summary: Login with username and password.
+      tags:
+        - Users
+      requestBody:
+        description: User login
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Login successful.
+        '401':
+          description: Invalid username or password.
+        '500':
+          description: Internal server error.
+tags:
+  - name: Barangay
+    description: Endpoints for managing barangay data
+  - name: People
+    description: Endpoints for managing people data
+  - name: Users
+    description: Endpoints for managing users data

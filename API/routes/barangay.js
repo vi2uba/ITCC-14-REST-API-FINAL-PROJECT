@@ -23,29 +23,50 @@ const { json } = require('body-parser');
  *           type: string
  *         population:
  *           type: number
+ * 
  */
 
 /**
  * @swagger
  * /barangay:
  *   get:
- *     summary: Get a list of people with specific filters.
+ *     summary: Get a list of barangays with specific filters.
  *     tags: [Barangay]
  *     parameters:
- *       - name: keyname
+ *       - name: name/exact
  *         in: query
- *         description: The field name and condition separated by a forward slash (e.g., keyname/exact).
+ *         description: Filter by exact name.
  *         schema:
  *           type: string
- *       - name: value
+ *       - name: population/exact
  *         in: query
- *         description: The value to filter by.
+ *         description: Filter by exact population.
  *         schema:
- *           type: string
+ *           type: number
+ *       - name: population/lt
+ *         in: query
+ *         description: Filter by population less than.
+ *         schema:
+ *           type: number
+ * 
+ *       - name: population/gt
+ *         in: query
+ *         description: Filter by population greater than.
+ *         schema:
+ *           type: number
+ *     security:
+ *      - apiKey: []
+ * 
  *     responses:
  *       200:
  *         description: Successful response.
+ *       400:
+ *         description: No Matching Person.
+ *       500:
+ *         description: Internal Server error
  */
+
+
 
 /**
  * @swagger
@@ -65,9 +86,13 @@ const { json } = require('body-parser');
  *                 type: string
  *               population:
  *                 type: number
+ *     security:
+ *      - apiKey: []
  *     responses:
  *       200:
  *         description: Barangay created successfully.
+ *       400:
+ *         description: Clien error.
  *       500:
  *         description: Internal server error.
  */
@@ -97,6 +122,8 @@ const { json } = require('body-parser');
  *                 type: string
  *               population:
  *                 type: number
+ *     security:
+ *      - apiKey: []
  *     responses:
  *       200:
  *         description: Barangay updated successfully.
@@ -124,6 +151,8 @@ const { json } = require('body-parser');
  *                 type: string
  *               population:
  *                 type: number
+ *     security:
+ *      - apiKey: []
  *     responses:
  *       200:
  *         description: Barangay updated successfully.
@@ -139,6 +168,8 @@ const { json } = require('body-parser');
  *         description: ID of the barangay to delete.
  *         schema:
  *           type: string
+ *     security:
+ *      - apiKey: []
  *     responses:
  *       200:
  *         description: Barangay deleted successfully.
@@ -248,7 +279,7 @@ router.put('/:barangayID', (req, res, next) => {
         if (result.nModified > 0) {
           res.status(200).json({ message: 'Barangay updated successfully' });
         } else {
-          res.status(200).json({ message: 'No modifications made, but the Barangay exists' });
+          res.status(200).json({ message: 'Update Success' });
         }
       })
       .catch(err => {

@@ -43,19 +43,100 @@ const mongoose = require('mongoose');
  *     summary: Get a list of people with specific filters.
  *     tags: [People]
  *     parameters:
- *       - name: keyname
+ *       - name: name/exact
  *         in: query
- *         description: The field name and condition separated by a forward slash (e.g., keyname/exact).
+ *         description: Filter by name.
  *         schema:
  *           type: string
- *       - name: value
+ *  
+ *       - name: age/exact
  *         in: query
- *         description: The value to filter by.
+ *         description: Filter by exact age.
+ *         schema:
+ *           type: number
+ * 
+ *       - name: income/exact
+ *         in: query
+ *         description: Filter by exact income.
+ *         schema:
+ *           type: number
+ * 
+ *       - name: years_residing/exact
+ *         in: query
+ *         description: Filter by exact years residing.
+ *         schema:
+ *           type: number
+ * 
+ *       - name: marital_status/exact
+ *         in: query
+ *         description: Filter by Marital Status.
  *         schema:
  *           type: string
+ * 
+ *       - name: education/exact
+ *         in: query
+ *         description: Filter by Education.
+ *         schema:
+ *           type: string
+ * 
+ *       - name: employment/exact
+ *         in: query
+ *         description: Filter by Employment.
+ *         schema:
+ *           type: string
+ * 
+ *       - name: residence_Barangay/exact
+ *         in: query
+ *         description: Filter by exact residence.
+ *         schema:
+ *           type: string
+ * 
+ *       - name: age/lt
+ *         in: query
+ *         description: Filter by age less than.
+ *         schema:
+ *           type: number
+ * 
+ *       - name: age/gt
+ *         in: query
+ *         description: Filter by age greater than.
+ *         schema:
+ *           type: number
+ * 
+ *       - name: income/lt
+ *         in: query
+ *         description: Filter by income less than.
+ *         schema:
+ *           type: number
+ * 
+ *       - name: income/gt
+ *         in: query
+ *         description: Filter by income greater than.
+ *         schema:
+ *           type: number
+ * 
+ *       - name: years_residing/lt
+ *         in: query
+ *         description: Filter by years_residing less than.
+ *         schema:
+ *           type: number
+ * 
+ *       - name: years_residing/gt
+ *         in: query
+ *         description: Filter by years_residing greater than.
+ *         schema:
+ *           type: number
+ * 
+ *     security:
+ *      - apiKey: []
+ *        
  *     responses:
  *       200:
  *         description: Successful response.
+ *       400:
+ *         description: No Matching Person.
+ *       500:
+ *         description: Internal Server error.
  */
 
 /**
@@ -90,6 +171,9 @@ const mongoose = require('mongoose');
  *                 type: string
  *               zone:
  *                 type: string
+ * 
+ *     security:
+ *      - apiKey: []
  *     responses:
  *       201:
  *         description: Person created successfully.
@@ -138,6 +222,8 @@ const mongoose = require('mongoose');
  *                 type: string
  *               zone:
  *                 type: string
+ *     security:
+ *      - apiKey: []
  *     responses:
  *       200:
  *         description: Person updated successfully.
@@ -181,6 +267,8 @@ const mongoose = require('mongoose');
  *                 type: string
  *               zone:
  *                 type: string
+ *     security:
+ *      - apiKey: []
  *     responses:
  *       200:
  *         description: Person updated successfully.
@@ -198,6 +286,9 @@ const mongoose = require('mongoose');
  *         description: ID of the person to delete.
  *         schema:
  *           type: string
+ * 
+ *     security:
+ *      - apiKey: []
  *     responses:
  *       200:
  *         description: Person deleted successfully.
@@ -341,7 +432,7 @@ router.patch('/:personID', (req, res, next) => {
             if (result.nModified > 0) {
                 res.status(200).json({ message: 'Person updated successfully' });
             } else {
-                res.status(200).json({ message: 'No modifications made, but the Person exists' });
+                res.status(200).json({ message: 'Update Success' });
             }
         })
         .catch(err => {
