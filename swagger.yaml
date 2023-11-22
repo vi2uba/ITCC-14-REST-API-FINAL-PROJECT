@@ -17,7 +17,7 @@ components:
   securitySchemes:
     apiKey:
       type: apiKey
-      name: APIKey
+      name: api_key
       in: header
     jwt:
       type: apiKey
@@ -93,6 +93,7 @@ paths:
           schema:
             type: number
       security:
+        - apiKey: []
         - jwt: []
       responses:
         '200':
@@ -118,6 +119,7 @@ paths:
                 population:
                   type: number
       security:
+        - apiKey: []
         - jwt: []
       responses:
         '200':
@@ -181,6 +183,7 @@ paths:
                 population:
                   type: number
       security:
+        - apiKey: []
         - jwt: []
       responses:
         '200':
@@ -199,6 +202,7 @@ paths:
           schema:
             type: string
       security:
+        - apiKey: []
         - jwt: []
       responses:
         '200':
@@ -284,6 +288,7 @@ paths:
           schema:
             type: number
       security:
+        - apiKey: []
         - jwt: []
       responses:
         '200':
@@ -323,6 +328,7 @@ paths:
                 zone:
                   type: string
       security:
+        - apiKey: []
         - jwt: []
       responses:
         '201':
@@ -370,6 +376,7 @@ paths:
                 zone:
                   type: string
       security:
+        - apiKey: []
         - jwt: []
       responses:
         '200':
@@ -416,6 +423,7 @@ paths:
                 zone:
                   type: string
       security:
+        - apiKey: []
         - jwt: []
       responses:
         '200':
@@ -436,6 +444,7 @@ paths:
           schema:
             type: string
       security:
+        - apiKey: []
         - jwt: []
       responses:
         '200':

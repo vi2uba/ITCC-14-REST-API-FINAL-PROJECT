@@ -130,6 +130,7 @@ const apikeyAndJwtAuthMiddleware = require('../middlewares/apikeyAndJwtAuthMiddl
  *           type: number
  * 
  *     security:
+ *      - apiKey: []
  *      - jwt: []
  *        
  *     responses:
@@ -175,6 +176,7 @@ const apikeyAndJwtAuthMiddleware = require('../middlewares/apikeyAndJwtAuthMiddl
  *                 type: string
  * 
  *     security:
+ *      - apiKey: []
  *      - jwt: []
  *     responses:
  *       201:
@@ -225,6 +227,7 @@ const apikeyAndJwtAuthMiddleware = require('../middlewares/apikeyAndJwtAuthMiddl
  *               zone:
  *                 type: string
  *     security:
+ *      - apiKey: []
  *      - jwt: []
  *     responses:
  *       200:
@@ -270,6 +273,7 @@ const apikeyAndJwtAuthMiddleware = require('../middlewares/apikeyAndJwtAuthMiddl
  *               zone:
  *                 type: string
  *     security:
+ *      - apiKey: []
  *      - jwt: []
  *     responses:
  *       200:
@@ -290,6 +294,7 @@ const apikeyAndJwtAuthMiddleware = require('../middlewares/apikeyAndJwtAuthMiddl
  *           type: string
  * 
  *     security:
+ *      - apiKey: []
  *      - jwt: []
  *     responses:
  *       200:

@@ -18,7 +18,7 @@ const swaggerOptions = {
     components:{securitySchemes:{
     apiKey:{
       type: 'apiKey',
-      name: 'APIKey',
+      name: 'api_key',
       in: 'header'},
     
     jwt:{

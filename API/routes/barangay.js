@@ -3,30 +3,9 @@ const router = express.Router();
 const mongoose = require('mongoose');
 
 const Barangay = require('../models/barangay_model');
-const jwt = require('jsonwebtoken');
 
 const apikeyAndJwtAuthMiddleware = require('../middlewares/apikeyAndJwtAuthMiddleware');
 
-//Java Web Token Authentication
-const authenticateJWT = (req, res, next) => {
-  const token = req.header('Authorization');
-
-  if (!token) {
-    return res.status(401).json({ message: 'Unauthorized' });
-  }
-
-  jwt.verify(token, 'yourSecretKey', (err, user) => {
-    if (err) {
-      return res.status(403).json({ message: 'Forbidden' });
-    }
-
-    // Attach the user to the request object for future use (optional)
-    req.user = user;
-
-    // Call next() to allow the request to continue to the route
-    next();
-  });
-}
 
 const { json } = require('body-parser');
 
@@ -81,6 +60,7 @@ const { json } = require('body-parser');
  *         schema:
  *           type: number
  *     security:
+ *      - apiKey: []
  *      - jwt: []
  * 
  *     responses:
@@ -113,6 +93,7 @@ const { json } = require('body-parser');
  *               population:
  *                 type: number
  *     security:
+ *      - apiKey: []
  *      - jwt: []
  *     responses:
  *       200:
@@ -178,6 +159,7 @@ const { json } = require('body-parser');
  *               population:
  *                 type: number
  *     security:
+ *      - apiKey: []
  *      - jwt: []
  *     responses:
  *       200:
@@ -195,6 +177,7 @@ const { json } = require('body-parser');
  *         schema:
  *           type: string
  *     security:
+ *      - apiKey: []
  *      - jwt: []
  *     responses:
  *       200:

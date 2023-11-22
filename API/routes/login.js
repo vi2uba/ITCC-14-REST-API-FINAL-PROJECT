@@ -16,8 +16,7 @@ router.post('/', async (req, res) => {
       res.json({
         success: true,
         message: 'Login successful',
-        api_key: user.api_key, // Include the API key in the response
-        token,
+        api_key: user.api_key,
       });
     } else {
       // Invalid credentials
