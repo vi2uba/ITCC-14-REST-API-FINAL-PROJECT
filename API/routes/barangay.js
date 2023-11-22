@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const Barangay = require('../models/barangay_model');
 const jwt = require('jsonwebtoken');
 
+const apikeyAndJwtAuthMiddleware = require('../middlewares/apikeyAndJwtAuthMiddleware');
+
 //Java Web Token Authentication
 const authenticateJWT = (req, res, next) => {
   const token = req.header('Authorization');
@@ -206,7 +208,7 @@ const { json } = require('body-parser');
 
 
 // Handles GET request to retrieve barangays with specific filters
-router.get('/', authenticateJWT, async (req, res, next) => {
+router.get('/', apikeyAndJwtAuthMiddleware, async (req, res, next) => {
   const filters = req.query; // Get the query parameters from the request
 
   const filterConditions = {};
@@ -254,7 +256,7 @@ router.get('/', authenticateJWT, async (req, res, next) => {
 
 
 //Handles POST requests
-router.post('/', authenticateJWT, async (req,res,next) =>{
+router.post('/', apikeyAndJwtAuthMiddleware, async (req,res,next) =>{
     const barangay ={
         name: req.body.name,
         population: req.body.population
@@ -288,7 +290,7 @@ router.post('/', authenticateJWT, async (req,res,next) =>{
 });
 
 //Handles PUT requests
-router.put('/:barangayID', authenticateJWT, async (req, res, next) => {
+router.put('/:barangayID', apikeyAndJwtAuthMiddleware, async (req, res, next) => {
     const barangayID = req.params.barangayID;
     const updateOps = {};
   
@@ -315,7 +317,7 @@ router.put('/:barangayID', authenticateJWT, async (req, res, next) => {
   
 
 //Handle PATCH requests
-router.patch('/:barangayID', authenticateJWT, async (req, res, next) => {
+router.patch('/:barangayID', apikeyAndJwtAuthMiddleware, async (req, res, next) => {
     const barangayID = req.params.barangayID;
     const updateOps = {};
   
@@ -344,7 +346,7 @@ router.patch('/:barangayID', authenticateJWT, async (req, res, next) => {
 
 //Handles DELETE requests
 
-router.delete('/:barangayID', authenticateJWT, async (req,res,next) =>{
+router.delete('/:barangayID', apikeyAndJwtAuthMiddleware, async (req,res,next) =>{
     const barangayID = req.params.barangayID;
 
     Barangay.deleteOne({_id: barangayID})

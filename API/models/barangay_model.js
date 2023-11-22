@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const barangaySchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
-    name: String,
-    population: Number
+    name: {type: String, required: true},
+    population: {type: Number, required: true},
 });
 
 module.exports = mongoose.model('Barangay', barangaySchema);

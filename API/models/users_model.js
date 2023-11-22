@@ -8,10 +8,9 @@ mongoose.modelSchemas = {};
 const usersSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     email:String,
-    username:String,
-    password:String,
-    api_key:String,
-    userStatus:Number,
+    username:{type:String,required:true},
+    password:{type:String,required:true},
+    api_key:{type:String,required:true},
     
 });
 

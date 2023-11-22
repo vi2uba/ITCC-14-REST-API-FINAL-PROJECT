@@ -13,7 +13,12 @@ router.post('/', async (req, res) => {
       // Successful login
       const token = generateToken(user.username); // Generate JWT token
 
-      res.json({ success: true, message: 'Login successful', token });
+      res.json({
+        success: true,
+        message: 'Login successful',
+        api_key: user.api_key, // Include the API key in the response
+        token,
+      });
     } else {
       // Invalid credentials
       res.status(401).json({ success: false, message: 'Invalid username or password' });
