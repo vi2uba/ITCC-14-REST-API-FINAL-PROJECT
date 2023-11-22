@@ -8,6 +8,7 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger'); // Import your Swagger configuration
 const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const barangayRoutes = require('./API/routes/barangay');
 const peopleRoutes = require('./API/routes/people');
@@ -15,7 +16,7 @@ const userRoutes = require('./API/routes/users');
 const loginRoutes = require('./API/routes/login');
 const registerRoutes = require('./API/routes/register');
 //Connect to MongoAtlas DB
-mongoose.connect('mongodb+srv://vinniuba2:Vl90RrRWSg3VrwX6@node-rest-api.61hixs6.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect(process.env.URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
