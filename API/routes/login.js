@@ -2,6 +2,7 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const User = require('../models/users_model');
+require('dotenv').config();
 
 router.post('/', async (req, res) => {
   const { username, password } = req.body;
@@ -17,6 +18,7 @@ router.post('/', async (req, res) => {
         success: true,
         message: 'Login successful',
         api_key: user.api_key,
+        JavaWebToken: token,
       });
     } else {
       // Invalid credentials
@@ -31,8 +33,8 @@ router.post('/', async (req, res) => {
 
 // Function to generate JWT token
 const generateToken = (username) => {
-  const secretKey = 'yourSecretKey'; // Replace with your actual secret key
-  const token = jwt.sign({ username }, secretKey, { expiresIn: '600s' }); // Set token expiration time
+                              // Uses the secret key from the .env file
+  const token = jwt.sign({ username }, process.env.SECRETKEY, { expiresIn: '600s' }); // Set token expiration time
 
   return token;
 };

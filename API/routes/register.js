@@ -5,6 +5,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const User = require('../models/users_model');
+require('dotenv').config();
 
 // Route to register a new user
 router.post('/', async (req, res) => {
@@ -50,7 +51,7 @@ function generateApiKey() {
 
 // Function to generate a JWT token
 function generateJwtToken(user) {
-  return jwt.sign({ userId: user._id, username: user.username }, 'yourSecretKey', { expiresIn: '1h' });
+  return jwt.sign({ userId: user._id, username: user.username }, process.env.SECRETKEY, { expiresIn: '1h' });
 }
 
 module.exports = router;

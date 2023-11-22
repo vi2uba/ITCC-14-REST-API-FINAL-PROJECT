@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/users_model');
+require('dotenv').config();
 
 const apikeyAndJwtAuthMiddleware = async (req, res, next) => {
   try {
@@ -16,7 +17,7 @@ const apikeyAndJwtAuthMiddleware = async (req, res, next) => {
     if (user) {
       if (token) {
         try {
-          const decoded = jwt.verify(token, 'yourSecretKey');
+          const decoded = jwt.verify(token, process.env.SECRETKEY);
           req.user = decoded;
           next();
         } catch (jwtError) {
