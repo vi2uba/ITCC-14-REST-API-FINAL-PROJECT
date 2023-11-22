@@ -19,7 +19,15 @@ const swaggerOptions = {
     apiKey:{
       type: 'apiKey',
       name: 'APIKey',
-      in: 'header'}}}
+      in: 'header'},
+    
+    jwt:{
+      type: 'apiKey',
+      name: 'Authorization',
+      in: 'header',
+    }
+    
+    }}
   },
   apis: [
     './API/routes/barangay.js',

@@ -3,7 +3,31 @@ const router = express.Router();
 const mongoose = require('mongoose');
 
 const Barangay = require('../models/barangay_model');
+const jwt = require('jsonwebtoken');
+
+//Java Web Token Authentication
+const authenticateJWT = (req, res, next) => {
+  const token = req.header('Authorization');
+
+  if (!token) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  jwt.verify(token, 'yourSecretKey', (err, user) => {
+    if (err) {
+      return res.status(403).json({ message: 'Forbidden' });
+    }
+
+    // Attach the user to the request object for future use (optional)
+    req.user = user;
+
+    // Call next() to allow the request to continue to the route
+    next();
+  });
+}
+
 const { json } = require('body-parser');
+
 
 /**
  * @swagger
@@ -55,7 +79,7 @@ const { json } = require('body-parser');
  *         schema:
  *           type: number
  *     security:
- *      - apiKey: []
+ *      - jwt: []
  * 
  *     responses:
  *       200:
@@ -87,7 +111,7 @@ const { json } = require('body-parser');
  *               population:
  *                 type: number
  *     security:
- *      - apiKey: []
+ *      - jwt: []
  *     responses:
  *       200:
  *         description: Barangay created successfully.
@@ -123,7 +147,7 @@ const { json } = require('body-parser');
  *               population:
  *                 type: number
  *     security:
- *      - apiKey: []
+ *      - jwt: []
  *     responses:
  *       200:
  *         description: Barangay updated successfully.
@@ -152,7 +176,7 @@ const { json } = require('body-parser');
  *               population:
  *                 type: number
  *     security:
- *      - apiKey: []
+ *      - jwt: []
  *     responses:
  *       200:
  *         description: Barangay updated successfully.
@@ -169,7 +193,7 @@ const { json } = require('body-parser');
  *         schema:
  *           type: string
  *     security:
- *      - apiKey: []
+ *      - jwt: []
  *     responses:
  *       200:
  *         description: Barangay deleted successfully.
@@ -182,7 +206,7 @@ const { json } = require('body-parser');
 
 
 // Handles GET request to retrieve barangays with specific filters
-router.get('/', (req, res, next) => {
+router.get('/', authenticateJWT, async (req, res, next) => {
   const filters = req.query; // Get the query parameters from the request
 
   const filterConditions = {};
@@ -230,7 +254,7 @@ router.get('/', (req, res, next) => {
 
 
 //Handles POST requests
-router.post('/', (req,res,next) =>{
+router.post('/', authenticateJWT, async (req,res,next) =>{
     const barangay ={
         name: req.body.name,
         population: req.body.population
@@ -264,7 +288,7 @@ router.post('/', (req,res,next) =>{
 });
 
 //Handles PUT requests
-router.put('/:barangayID', (req, res, next) => {
+router.put('/:barangayID', authenticateJWT, async (req, res, next) => {
     const barangayID = req.params.barangayID;
     const updateOps = {};
   
@@ -291,7 +315,7 @@ router.put('/:barangayID', (req, res, next) => {
   
 
 //Handle PATCH requests
-router.patch('/:barangayID', (req, res, next) => {
+router.patch('/:barangayID', authenticateJWT, async (req, res, next) => {
     const barangayID = req.params.barangayID;
     const updateOps = {};
   
@@ -320,7 +344,7 @@ router.patch('/:barangayID', (req, res, next) => {
 
 //Handles DELETE requests
 
-router.delete('/:barangayID', (req,res,next) =>{
+router.delete('/:barangayID', authenticateJWT, async (req,res,next) =>{
     const barangayID = req.params.barangayID;
 
     Barangay.deleteOne({_id: barangayID})

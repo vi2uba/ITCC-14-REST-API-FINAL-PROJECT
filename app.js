@@ -7,14 +7,13 @@ const mongoose = require('mongoose');
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const swaggerSpec = require('./swagger'); // Import your Swagger configuration
-
+const jwt = require('jsonwebtoken');
 
 const barangayRoutes = require('./API/routes/barangay');
 const peopleRoutes = require('./API/routes/people');
 const userRoutes = require('./API/routes/users');
 const loginRoutes = require('./API/routes/login');
 const registerRoutes = require('./API/routes/register');
-
 //Connect to MongoAtlas DB
 mongoose.connect('mongodb+srv://vinniuba2:Vl90RrRWSg3VrwX6@node-rest-api.61hixs6.mongodb.net/?retryWrites=true&w=majority', {
   useNewUrlParser: true,
@@ -26,6 +25,10 @@ mongoose.connect('mongodb+srv://vinniuba2:Vl90RrRWSg3VrwX6@node-rest-api.61hixs6
   .catch((error) => {
     console.error('Error connecting to MongoDB:', error);
   });
+
+
+
+
 
 
 //Morgan Logs Requests
@@ -49,11 +52,11 @@ app.use((req,res,next) => {
 
 
 //Routes that will handle the requests
-app.use('/barangay', barangayRoutes);
-app.use('/people', peopleRoutes);
-app.use('/users', userRoutes);
-app.use('/login', loginRoutes);
-app.use('/register', registerRoutes);
+app.use('/barangay', barangayRoutes, );
+app.use('/people', peopleRoutes, );
+app.use('/users', userRoutes, );
+app.use('/login', loginRoutes, );
+app.use('/register', registerRoutes, );
 
 // Serve Swagger UI
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));

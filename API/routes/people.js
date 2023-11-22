@@ -4,6 +4,29 @@ const People = require('../models/people_model');
 const Barangay = require('../models/barangay_model');
 const mongoose = require('mongoose');
 
+const jwt = require('jsonwebtoken');
+
+//Java Web Token Authentication
+const authenticateJWT = (req, res, next) => {
+    const token = req.header('Authorization');
+  
+    if (!token) {
+      return res.status(401).json({ message: 'Unauthorized' });
+    }
+  
+    jwt.verify(token, 'yourSecretKey', (err, user) => {
+      if (err) {
+        return res.status(403).json({ message: 'Forbidden' });
+      }
+  
+      // Attach the user to the request object for future use (optional)
+      req.user = user;
+  
+      // Call next() to allow the request to continue to the route
+      next();
+    });
+  }
+
 /**
  * @swagger
  * tags:
@@ -128,7 +151,7 @@ const mongoose = require('mongoose');
  *           type: number
  * 
  *     security:
- *      - apiKey: []
+ *      - jwt: []
  *        
  *     responses:
  *       200:
@@ -173,7 +196,7 @@ const mongoose = require('mongoose');
  *                 type: string
  * 
  *     security:
- *      - apiKey: []
+ *      - jwt: []
  *     responses:
  *       201:
  *         description: Person created successfully.
@@ -223,7 +246,7 @@ const mongoose = require('mongoose');
  *               zone:
  *                 type: string
  *     security:
- *      - apiKey: []
+ *      - jwt: []
  *     responses:
  *       200:
  *         description: Person updated successfully.
@@ -268,7 +291,7 @@ const mongoose = require('mongoose');
  *               zone:
  *                 type: string
  *     security:
- *      - apiKey: []
+ *      - jwt: []
  *     responses:
  *       200:
  *         description: Person updated successfully.
@@ -288,7 +311,7 @@ const mongoose = require('mongoose');
  *           type: string
  * 
  *     security:
- *      - apiKey: []
+ *      - jwt: []
  *     responses:
  *       200:
  *         description: Person deleted successfully.
@@ -299,7 +322,7 @@ const mongoose = require('mongoose');
  */
 
 // Handles GET request to retrieve people with specific filters
-router.get('/', (req, res, next) => {
+router.get('/', authenticateJWT, async (req, res, next) => {
     const filters = req.query; // Get the query parameters from the request
 
     const filterConditions = {};
@@ -351,7 +374,7 @@ router.get('/', (req, res, next) => {
 
 
 // Handles POST requests for adding a new person
-router.post('/', async (req, res, next) => {
+router.post('/', authenticateJWT, async (req, res, next) => {
     const person = new People({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
@@ -391,7 +414,7 @@ router.post('/', async (req, res, next) => {
 
 
 // Handles PUT requests
-router.put('/:personID', (req, res, next) => {
+router.put('/:personID', authenticateJWT, async(req, res, next) => {
     const personID = req.params.personID;
     const updateOps = {};
 
@@ -417,7 +440,7 @@ router.put('/:personID', (req, res, next) => {
 
 
 // Handle PATCH requests
-router.patch('/:personID', (req, res, next) => {
+router.patch('/:personID', authenticateJWT, async(req, res, next) => {
     const personID = req.params.personID;
     const updateOps = {};
 
@@ -444,7 +467,7 @@ router.patch('/:personID', (req, res, next) => {
 module.exports = router;
 
 // Handles DELETE requests for removing a person
-router.delete('/:personID', async (req, res, next) => {
+router.delete('/:personID', authenticateJWT, async (req, res, next) => {
     const personID = req.params.personID;
 
     try {

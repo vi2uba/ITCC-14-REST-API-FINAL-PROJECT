@@ -19,6 +19,10 @@ components:
       type: apiKey
       name: APIKey
       in: header
+    jwt:
+      type: apiKey
+      name: Authorization
+      in: header
   schemas:
     Barangays:
       type: object
@@ -89,7 +93,7 @@ paths:
           schema:
             type: number
       security:
-        - apiKey: []
+        - jwt: []
       responses:
         '200':
           description: Successful response.
@@ -114,7 +118,7 @@ paths:
                 population:
                   type: number
       security:
-        - apiKey: []
+        - jwt: []
       responses:
         '200':
           description: Barangay created successfully.
@@ -147,7 +151,7 @@ paths:
                 population:
                   type: number
       security:
-        - apiKey: []
+        - jwt: []
       responses:
         '200':
           description: Barangay updated successfully.
@@ -177,7 +181,7 @@ paths:
                 population:
                   type: number
       security:
-        - apiKey: []
+        - jwt: []
       responses:
         '200':
           description: Barangay updated successfully.
@@ -195,7 +199,7 @@ paths:
           schema:
             type: string
       security:
-        - apiKey: []
+        - jwt: []
       responses:
         '200':
           description: Barangay deleted successfully.
@@ -280,7 +284,7 @@ paths:
           schema:
             type: number
       security:
-        - apiKey: []
+        - jwt: []
       responses:
         '200':
           description: Successful response.
@@ -319,7 +323,7 @@ paths:
                 zone:
                   type: string
       security:
-        - apiKey: []
+        - jwt: []
       responses:
         '201':
           description: Person created successfully.
@@ -366,7 +370,7 @@ paths:
                 zone:
                   type: string
       security:
-        - apiKey: []
+        - jwt: []
       responses:
         '200':
           description: Person updated successfully.
@@ -412,7 +416,7 @@ paths:
                 zone:
                   type: string
       security:
-        - apiKey: []
+        - jwt: []
       responses:
         '200':
           description: Person updated successfully.
@@ -432,7 +436,7 @@ paths:
           schema:
             type: string
       security:
-        - apiKey: []
+        - jwt: []
       responses:
         '200':
           description: Person deleted successfully.

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../models/users_model'); // Update the model path if needed
+const mongoose = require('mongoose'); // Add this line to import mongoose
+const User = require('../models/users_model');
 
 // Route to register a new user
 router.post('/', async (req, res) => {
@@ -15,7 +16,7 @@ router.post('/', async (req, res) => {
     }
 
     // Create a new user
-    const newUser = new User({ username, password });
+    const newUser = new User({_id: new mongoose.Types.ObjectId(), username, password });
     const savedUser = await newUser.save();
 
     res.status(201).json({ success: true, message: 'User registered successfully', user: savedUser });
