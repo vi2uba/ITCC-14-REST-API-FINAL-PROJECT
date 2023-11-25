@@ -34,7 +34,7 @@ router.post('/', async (req, res) => {
 // Function to generate JWT token
 const generateToken = (username) => {
                               // Uses the secret key from the .env file
-  const token = jwt.sign({ username }, process.env.SECRETKEY, { expiresIn: '600s' }); // Set token expiration time
+  const token = jwt.sign({ username }, process.env.SECRETKEY, { expiresIn: '1200s' }); // Set token expiration time
 
   return token;
 };

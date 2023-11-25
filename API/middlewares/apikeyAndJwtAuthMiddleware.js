@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/users_model');
 require('dotenv').config();
-const adminAuthMiddleware = require('./adminAuthMiddleware');
 
 const apikeyAndJwtAuthMiddleware = async (req, res, next) => {
   try {
@@ -13,26 +12,28 @@ const apikeyAndJwtAuthMiddleware = async (req, res, next) => {
     }
 
     // Validate the API key against the database
-    const user = await User.findOne({ api_key: apiKey });
+    const decoded = jwt.verify(token, process.env.SECRETKEY);
 
-    if (user) {
-      if (token) {
-        try {
-          const decoded = jwt.verify(token, process.env.SECRETKEY);
-          req.user = decoded;
-          next();
-        } catch (jwtError) {
-          return res.status(401).json({ error: 'Invalid JWT' });
-        }
-      } else {
-        return res.status(401).json({ error: 'JWT is missing' });
-      }
-    } else {
-      return res.status(401).json({ error: 'Invalid API key' });
-    }
+    // Log the decoded username for debugging
+    console.log('Decoded username:', decoded.username);
+
+    req.user = decoded;
+    next();
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+const adminAuthMiddleware = async (req, res, next) => {
+  const user = await User.findById(req.user.userId);
+
+  console.log('User object in adminAuthMiddleware:', user);
+
+  if (user && user.level === 'admin') {
+    next();
+  } else {
+    return res.status(403).json({ error: 'Unauthorized - Admin access required' });
   }
 };
 
