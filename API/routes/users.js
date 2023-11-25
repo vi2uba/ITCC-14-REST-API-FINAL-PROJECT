@@ -30,8 +30,9 @@ const { json } = require('body-parser');
  *           type: string
  *         api_key:
  *           type: string
- *         userStatus:
- *           type: number
+ *         level:
+ *           type: string
+ *       
  * 
  */
 

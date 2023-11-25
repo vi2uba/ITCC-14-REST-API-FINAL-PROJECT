@@ -17,6 +17,7 @@ const peopleSchema = mongoose.Schema({
     
     residence_Barangay: {
         type: String,
+        required: true,
         ref: 'Barangay', // Reference to the Barangay model
     },
     zone: Number,

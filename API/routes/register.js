@@ -19,6 +19,7 @@ router.post('/', async (req, res) => {
       return res.status(400).json({ success: false, message: 'Username is already taken' });
     }
 
+    
     // Create a new user
     const api_key = generateApiKey();
     const newUser = new User({

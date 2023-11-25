@@ -63,8 +63,8 @@ components:
           type: string
         api_key:
           type: string
-        userStatus:
-          type: number
+        level:
+          type: string
 paths:
   /barangay:
     get:
@@ -325,6 +325,7 @@ paths:
                   type: string
                 residence_Barangay:
                   type: string
+                  required: true
                 zone:
                   type: string
       security:

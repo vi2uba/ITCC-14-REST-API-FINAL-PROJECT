@@ -3,7 +3,7 @@ const router = express.Router();
 const People = require('../models/people_model');
 const Barangay = require('../models/barangay_model');
 const mongoose = require('mongoose');
-const apikeyAndJwtAuthMiddleware = require('../middlewares/apikeyAndJwtAuthMiddleware');
+const { apikeyAndJwtAuthMiddleware, adminAuthMiddleware } = require('../middlewares/apikeyAndJwtAuthMiddleware');
 
 
 /**
@@ -172,6 +172,7 @@ const apikeyAndJwtAuthMiddleware = require('../middlewares/apikeyAndJwtAuthMiddl
  *                 type: string
  *               residence_Barangay:
  *                 type: string
+ *                 required: true
  *               zone:
  *                 type: string
  * 
@@ -306,7 +307,7 @@ const apikeyAndJwtAuthMiddleware = require('../middlewares/apikeyAndJwtAuthMiddl
  */
 
 // Handles GET request to retrieve people with specific filters
-router.get('/', apikeyAndJwtAuthMiddleware, async (req, res, next) => {
+router.get('/', apikeyAndJwtAuthMiddleware, adminAuthMiddleware, async (req, res, next) => {
     const filters = req.query; // Get the query parameters from the request
 
     const filterConditions = {};
@@ -358,7 +359,7 @@ router.get('/', apikeyAndJwtAuthMiddleware, async (req, res, next) => {
 
 
 // Handles POST requests for adding a new person
-router.post('/', apikeyAndJwtAuthMiddleware, async (req, res, next) => {
+router.post('/', apikeyAndJwtAuthMiddleware, adminAuthMiddleware, async (req, res, next) => {
     const person = new People({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
@@ -398,7 +399,7 @@ router.post('/', apikeyAndJwtAuthMiddleware, async (req, res, next) => {
 
 
 // Handles PUT requests
-router.put('/:personID', apikeyAndJwtAuthMiddleware, async(req, res, next) => {
+router.put('/:personID', apikeyAndJwtAuthMiddleware, adminAuthMiddleware, async(req, res, next) => {
     const personID = req.params.personID;
     const updateOps = {};
 
@@ -424,7 +425,7 @@ router.put('/:personID', apikeyAndJwtAuthMiddleware, async(req, res, next) => {
 
 
 // Handle PATCH requests
-router.patch('/:personID', apikeyAndJwtAuthMiddleware, async(req, res, next) => {
+router.patch('/:personID', apikeyAndJwtAuthMiddleware, adminAuthMiddleware, async(req, res, next) => {
     const personID = req.params.personID;
     const updateOps = {};
 
@@ -451,7 +452,7 @@ router.patch('/:personID', apikeyAndJwtAuthMiddleware, async(req, res, next) => 
 module.exports = router;
 
 // Handles DELETE requests for removing a person
-router.delete('/:personID', apikeyAndJwtAuthMiddleware, async (req, res, next) => {
+router.delete('/:personID', apikeyAndJwtAuthMiddleware, adminAuthMiddleware, async (req, res, next) => {
     const personID = req.params.personID;
 
     try {

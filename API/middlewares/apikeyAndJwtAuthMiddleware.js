@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/users_model');
 require('dotenv').config();
+const adminAuthMiddleware = require('./adminAuthMiddleware');
 
 const apikeyAndJwtAuthMiddleware = async (req, res, next) => {
   try {
@@ -35,4 +36,4 @@ const apikeyAndJwtAuthMiddleware = async (req, res, next) => {
   }
 };
 
-module.exports = apikeyAndJwtAuthMiddleware;
+module.exports = { apikeyAndJwtAuthMiddleware, adminAuthMiddleware };

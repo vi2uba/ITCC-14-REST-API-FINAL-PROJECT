@@ -4,7 +4,8 @@ const mongoose = require('mongoose');
 
 const Barangay = require('../models/barangay_model');
 
-const apikeyAndJwtAuthMiddleware = require('../middlewares/apikeyAndJwtAuthMiddleware');
+const { apikeyAndJwtAuthMiddleware, adminAuthMiddleware } = require('../middlewares/apikeyAndJwtAuthMiddleware');
+
 
 
 const { json } = require('body-parser');
@@ -239,7 +240,7 @@ router.get('/', apikeyAndJwtAuthMiddleware, async (req, res, next) => {
 
 
 //Handles POST requests
-router.post('/', apikeyAndJwtAuthMiddleware, async (req,res,next) =>{
+router.post('/', apikeyAndJwtAuthMiddleware, adminAuthMiddleware, async (req,res,next) =>{
     const barangay ={
         name: req.body.name,
         population: req.body.population
@@ -273,7 +274,7 @@ router.post('/', apikeyAndJwtAuthMiddleware, async (req,res,next) =>{
 });
 
 //Handles PUT requests
-router.put('/:barangayID', apikeyAndJwtAuthMiddleware, async (req, res, next) => {
+router.put('/:barangayID', apikeyAndJwtAuthMiddleware, adminAuthMiddleware, async (req, res, next) => {
     const barangayID = req.params.barangayID;
     const updateOps = {};
   
@@ -300,7 +301,7 @@ router.put('/:barangayID', apikeyAndJwtAuthMiddleware, async (req, res, next) =>
   
 
 //Handle PATCH requests
-router.patch('/:barangayID', apikeyAndJwtAuthMiddleware, async (req, res, next) => {
+router.patch('/:barangayID', apikeyAndJwtAuthMiddleware, adminAuthMiddleware, async (req, res, next) => {
     const barangayID = req.params.barangayID;
     const updateOps = {};
   
@@ -329,7 +330,7 @@ router.patch('/:barangayID', apikeyAndJwtAuthMiddleware, async (req, res, next) 
 
 //Handles DELETE requests
 
-router.delete('/:barangayID', apikeyAndJwtAuthMiddleware, async (req,res,next) =>{
+router.delete('/:barangayID', apikeyAndJwtAuthMiddleware, adminAuthMiddleware, async (req,res,next) =>{
     const barangayID = req.params.barangayID;
 
     Barangay.deleteOne({_id: barangayID})
