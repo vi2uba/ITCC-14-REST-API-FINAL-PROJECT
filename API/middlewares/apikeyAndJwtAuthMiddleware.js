@@ -15,7 +15,7 @@ const apikeyAndJwtAuthMiddleware = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.SECRETKEY);
 
     // Log the decoded username for debugging
-    console.log('Decoded username:', decoded.username);
+    console.log('Decoded username:', decoded);
 
     req.user = decoded;
     next();
@@ -25,16 +25,21 @@ const apikeyAndJwtAuthMiddleware = async (req, res, next) => {
   }
 };
 
+// to check if the user is an admin
 const adminAuthMiddleware = async (req, res, next) => {
-  const user = await User.findById(req.user.userId);
-
-  console.log('User object in adminAuthMiddleware:', user);
-
-  if (user && user.level === 'admin') {
-    next();
-  } else {
-    return res.status(403).json({ error: 'Unauthorized - Admin access required' });
+  try {
+    // Ensure req.user is available and has the 'level' property
+    if (req.user && req.user.level === 'admin') {
+      next();
+    } else {
+      return res.status(403).json({ error: 'Unauthorized - Admin access required' });
+    }
+  } catch (error) {
+    console.error('Error in adminAuthMiddleware:', error);
+    return res.status(500).json({ error: 'Internal server error' });
   }
 };
+
+
 
 module.exports = { apikeyAndJwtAuthMiddleware, adminAuthMiddleware };

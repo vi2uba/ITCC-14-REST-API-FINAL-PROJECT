@@ -338,20 +338,29 @@ router.get('/', apikeyAndJwtAuthMiddleware, adminAuthMiddleware, async (req, res
         }
     }
 
-    People.find(filterConditions)
-        .exec()
-        .then(people => {
-            if (people.length > 0) {
-                res.status(200).json(people);
-            } else {
-                res.status(404).json({ message: 'No matching people found' });
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).json({ error: err });
-        });
+    // Use Promise.all to execute both find and count queries concurrently
+    Promise.all([
+        People.find(filterConditions).exec(),
+        People.countDocuments(filterConditions).exec()
+    ])
+    .then(([people, count]) => {
+        if (people.length > 0) {
+            const response = {
+                count,
+                people
+            };
+            res.status(200).json(response);
+        } else {
+            res.status(404).json({ message: 'No matching people found' });
+        }
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({ error: err });
+    });
 });
+
+
 
 
 

@@ -8,11 +8,12 @@ router.post('/', async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const user = await User.findOne({ username, password });
+    const user = await User.findOne({ username, password});
 
     if (user) {
       // Successful login
-      const token = generateToken(user.username); // Generate JWT token
+      const token = generateToken(user); // Pass the entire user object
+
 
       res.json({
         success: true,
@@ -32,11 +33,16 @@ router.post('/', async (req, res) => {
 });
 
 // Function to generate JWT token
-const generateToken = (username) => {
-                              // Uses the secret key from the .env file
-  const token = jwt.sign({ username }, process.env.SECRETKEY, { expiresIn: '1200s' }); // Set token expiration time
+const generateToken = (user) => {
+  // Extract relevant user information, including the 'level' property
+  const { username, level } = user;
+
+  // Uses the secret key from the .env file
+  const token = jwt.sign({ username, level }, process.env.SECRETKEY, { expiresIn: '3000s' }); // Set token expiration time
+  
 
   return token;
 };
+
 
 module.exports = router;
